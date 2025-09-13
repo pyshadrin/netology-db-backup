@@ -77,10 +77,36 @@ pg_restore -U postgres -d mydb_restored -v /backups/mydb.dump
 
 3.1. С помощью официальной документации приведите пример команды инкрементного резервного копирования базы данных MySQL.
 ```
+В MySQL стандартный mysqldump не умеет делать инкрементные бэкапы, он всегда делает полный дамп.
+Для инкрементных резервных копий используют Percona XtraBackup (официальный инструмент от Percona, совместимый с MySQL/MariaDB).
+
+Полный бэкап:
+xtrabackup --backup --target-dir=/backups/full --user=root --password=pass
+
+Инкрементный бэкап:
+xtrabackup --backup --target-dir=/backups/inc1 --incremental-basedir=/backups/full --user=root --password=pass
+
+Следующий инкрементный бэкап:
+xtrabackup --backup --target-dir=/backups/inc2 --incremental-basedir=/backups/inc1 --user=root --password=pass
+
+Восстановление:
+xtrabackup --prepare --apply-log-only --target-dir=/backups/full
+- подготовка полного бэкапа:
+  xtrabackup --prepare --apply-log-only --target-dir=/backups/full
+- применение инкрементальных:
+  xtrabackup --prepare --apply-log-only --target-dir=/backups/full --incremental-dir=/backups/inc1
+  xtrabackup --prepare --apply-log-only --target-dir=/backups/full --incremental-dir=/backups/inc2
+- финализация:
+  xtrabackup --prepare --target-dir=/backups/full
 ```
 
 3.1.* В каких случаях использование реплики будет давать преимущество по сравнению с обычным резервным копированием?
 ```
+Репликация (slave/replica-сервер) даёт ряд преимуществ:
+- Минимизация простоев
+- Разгрузка master-сервера
+- Быстрое аварийное восстановление (HA)
+- Гибкость масштабирования
 ```
 
 ---
