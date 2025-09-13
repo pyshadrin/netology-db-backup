@@ -58,8 +58,29 @@
 ### Задание 2. PostgreSQL
 
 2.1. С помощью официальной документации приведите пример команды резервирования данных и восстановления БД (pgdump/pgrestore).
-`pg_dump -U postgres -F c -b -v -f /backups/mydb.dump mydb`
-`pg_restore -U postgres -d mydb_restored -v /backups/mydb.dump`
+```
+pg_dump -U postgres -F c -b -v -f /backups/mydb.dump mydb
+```
+```
+pg_restore -U postgres -d mydb_restored -v /backups/mydb.dump
+```
 
 2.1.* Возможно ли автоматизировать этот процесс? Если да, то как?
-`Можно использовать Cron > 0 2 * * * pg_dump -U postgres -F c mydb > /backups/mydb_$(date +\%F).dump`
+```
+Можно использовать Cron:
+0 2 * * * pg_dump -U postgres -F c mydb > /backups/mydb_$(date +\%F).dump
+```
+
+---
+
+### Задание 3. MySQL
+
+3.1. С помощью официальной документации приведите пример команды инкрементного резервного копирования базы данных MySQL.
+```
+```
+
+3.1.* В каких случаях использование реплики будет давать преимущество по сравнению с обычным резервным копированием?
+```
+```
+
+---
